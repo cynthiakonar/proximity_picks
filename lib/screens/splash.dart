@@ -1,40 +1,37 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:proximity_picks/screens/Register.dart';
+import 'package:proximity_picks/wrapper.dart';
 
-void main() => runApp(MyApp());
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
-class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(home: SplashScreen());
-  }
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+        const Duration(seconds: 2),
+        () => Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const Wrapper())));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE05656),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RegisterScreen()));
-        },
-        child: Container(
-            alignment: Alignment.center,
-            child: const Icon(
-              /*Image.asset(
-            "assets/icon.png",
-            //color : Colors.white,
-            width: 360,*/
-              Icons.grid_4x4_rounded,
-              size: 90.0,
-              color: Colors.white,
-            ).animate().tint(color: Colors.white).then().shake().shake()),
-      ),
+      body: Container(
+          alignment: Alignment.center,
+          child: const Icon(
+            Icons.grid_4x4_rounded,
+            size: 90.0,
+            color: Colors.white,
+          ).animate().tint(color: Colors.white).then().shake().shake()),
     );
   }
 }

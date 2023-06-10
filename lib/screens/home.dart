@@ -5,7 +5,8 @@ import 'package:proximity_picks/screens/preferences.dart';
 import 'profile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.uid});
+  final String uid;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -251,7 +252,10 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const PreferencesPage(isEditing: true),
+                builder: (context) => PreferencesPage(
+                  isEditing: true,
+                  uid: widget.uid,
+                ),
               ),
             );
           },

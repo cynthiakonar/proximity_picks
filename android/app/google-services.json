@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "491810207251",
+    "project_id": "proximitypicks",
+    "storage_bucket": "proximitypicks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491810207251:android:7bd43511e75e89ab6771e6",
+        "android_client_info": {
+          "package_name": "com.example.proximity_picks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491810207251-hu5u947dq4pr4379m1a4i4pmlcj3i9vp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARncvhhblf7DYuFbgxVAgNmY2fN7iRXA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491810207251-hu5u947dq4pr4379m1a4i4pmlcj3i9vp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

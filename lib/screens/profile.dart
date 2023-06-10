@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proximity_picks/models/user_model.dart';
 import 'package:proximity_picks/screens/Register.dart';
+
+import '../services/auth.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,6 +13,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -60,9 +65,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   SizedBox(height: size.width * 0.01),
-                  const Text(
-                    "email id",
-                    style: TextStyle(
+                  Text(
+                    Provider.of<MyUser?>(context, listen: false) == null
+                        ? "user email"
+                        : Provider.of<MyUser?>(context, listen: false)!.emailId,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -86,11 +93,13 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterScreen()));
+                    onTap: () async {
+                      await _auth.signOut().whenComplete(() =>
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterScreen())));
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
