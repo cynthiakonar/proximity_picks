@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proximity_picks/screens/Register.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -85,7 +86,12 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () async {},
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreen()));
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
