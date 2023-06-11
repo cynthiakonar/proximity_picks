@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:proximity_picks/controllers/preference_controller.dart';
+import 'package:proximity_picks/widgets/favourites_shimmer.dart';
 
 import '../models/user_model.dart';
 import 'home.dart';
@@ -16,30 +20,12 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
-  CollectionReference keywordscollection =
-      FirebaseFirestore.instance.collection('keywords');
-  CollectionReference shopscollection =
-      FirebaseFirestore.instance.collection('shops');
-
-  List selectedOptions = [];
-  List options = [];
+  PreferenceController preferenceController = Get.put(PreferenceController());
 
   @override
   void initState() {
     super.initState();
-    getInfo();
-  }
-
-  void getInfo() async {
-    if (widget.isEditing) {
-      QuerySnapshot querySnapshot = await shopscollection.get();
-      List allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-
-      for (var i = 0; i < allData.length; i++) {
-        options.addAll((allData[i] as Map)['shop']['keywords']);
-      }
-    }
-    setState(() {});
+    preferenceController.getInfo(widget.isEditing);
   }
 
   @override
@@ -112,52 +98,74 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     children: [
-                      Wrap(
-                        children: options.map((tag) {
-                          return GestureDetector(
-                            onTap: () {
-                              if (selectedOptions.contains(tag)) {
-                                setState(() {
-                                  selectedOptions.remove(tag);
-                                });
-                              } else {
-                                setState(() {
-                                  selectedOptions.add(tag);
-                                });
-                              }
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 8, top: 12),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 6),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: selectedOptions.contains(tag)
-                                      ? const Color(0xFFE05656).withOpacity(0.2)
-                                      : Colors.white,
-                                  border: Border.all(
-                                    width:
-                                        selectedOptions.contains(tag) ? 2 : 1,
-                                    color: selectedOptions.contains(tag)
-                                        ? const Color(0xFFE05656)
-                                        : Colors.grey,
-                                  )),
-                              child: Text(
-                                tag,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: selectedOptions.contains(tag)
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
-                                  color: selectedOptions.contains(tag)
-                                      ? const Color(0xFFE05656)
-                                      : const Color(0xFF737373),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      GetBuilder<PreferenceController>(builder: (controller) {
+                        return preferenceController.isLoading.value
+                            ? const FavouritesShimmer()
+                            : Wrap(
+                                children:
+                                    preferenceController.options.map((tag) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (preferenceController.selectedOptions
+                                          .contains(tag)) {
+                                        setState(() {
+                                          preferenceController.selectedOptions
+                                              .remove(tag);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          preferenceController.selectedOptions
+                                              .add(tag);
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          right: 8, top: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 14, vertical: 6),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: preferenceController
+                                                  .selectedOptions
+                                                  .contains(tag)
+                                              ? const Color(0xFFE05656)
+                                                  .withOpacity(0.2)
+                                              : Colors.white,
+                                          border: Border.all(
+                                            width: preferenceController
+                                                    .selectedOptions
+                                                    .contains(tag)
+                                                ? 2
+                                                : 1,
+                                            color: preferenceController
+                                                    .selectedOptions
+                                                    .contains(tag)
+                                                ? const Color(0xFFE05656)
+                                                : Colors.grey,
+                                          )),
+                                      child: Text(
+                                        tag,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: preferenceController
+                                                  .selectedOptions
+                                                  .contains(tag)
+                                              ? FontWeight.w600
+                                              : FontWeight.w400,
+                                          color: preferenceController
+                                                  .selectedOptions
+                                                  .contains(tag)
+                                              ? const Color(0xFFE05656)
+                                              : const Color(0xFF737373),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                      }),
                     ],
                   ),
                 ),
@@ -167,35 +175,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () async {
-                        final user =
-                            Provider.of<MyUser?>(context, listen: false);
-                        if ((await keywordscollection.doc(user!.uid).get())
-                            .exists) {
-                          keywordscollection
-                              .doc(user.uid)
-                              .update({'keywords': selectedOptions})
-                              .then((_) => print('Updated'))
-                              .catchError(
-                                  (error) => print('Update failed: $error'));
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => HomePage(uid: user.uid)),
-                          );
-                        } else {
-                          keywordscollection
-                              .doc(user.uid)
-                              .set({'keywords': selectedOptions})
-                              .then((_) => print('Added'))
-                              .catchError(
-                                  (error) => print('Add failed: $error'));
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => HomePage(uid: user.uid)),
-                          );
-                        }
+                      onTap: () {
+                        preferenceController
+                            .addAndUpdateSelectedOptions(context);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),

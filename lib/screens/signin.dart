@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:proximity_picks/services/auth.dart';
+import 'package:page_transition/page_transition.dart';
 
+import '../controllers/login_controller.dart';
 import 'home.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -14,8 +17,7 @@ class SigninScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SigninScreen> {
   final AuthService _auth = AuthService();
-  late String email;
-  late String password;
+  final LoginController _loginController = Get.put(LoginController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -58,6 +60,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
                   SizedBox(height: size.width * 0.2),
                   TextFormField(
+                    controller: _loginController.emailController,
                     textCapitalization: TextCapitalization.none,
                     enableSuggestions: false,
                     validator: (value) {
@@ -67,9 +70,6 @@ class _SigninScreenState extends State<SigninScreen> {
                         return 'Please enter a valid email address.';
                       }
                       return null;
-                    },
-                    onChanged: (val) {
-                      email = val;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.emailAddress,
@@ -116,15 +116,13 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
                   SizedBox(height: size.width * 0.05),
                   TextFormField(
+                    controller: _loginController.passwordController,
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty || value.length < 6) {
                         return 'Password must be at least 6 characters long.';
                       }
                       return null;
-                    },
-                    onChanged: (val) {
-                      password = val;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
@@ -174,21 +172,34 @@ class _SigninScreenState extends State<SigninScreen> {
                     children: [
                       Expanded(
                         child: GestureDetector(
-                          onTap: () {
-                            _auth
-                                .emailLogin(email.trim(), password)
-                                .whenComplete(
-                              () {
+                          onTap: () async {
+                            if (_formKey.currentState!.validate() &&
+                                !_loginController.isLoading.value) {
+                              var result = await _auth.emailLogin(
+                                  _loginController.emailController.text.trim(),
+                                  _loginController.passwordController.text
+                                      .trim(),
+                                  context);
+                              if (await result == null) {
+                                print("not logged in");
+                              } else {
+                                print("logged in");
                                 final User? user =
                                     FirebaseAuth.instance.currentUser;
-
+                                _loginController.emailController.clear();
+                                _loginController.passwordController.clear();
                                 Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomePage(uid: user!.uid)),
+                                  PageTransition(
+                                    child: HomePage(uid: user!.uid),
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: const Duration(milliseconds: 300),
+                                  ),
                                 );
-                              },
-                            );
+
+                                _loginController.emailController.clear();
+                                _loginController.passwordController.clear();
+                              }
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(16),
@@ -196,14 +207,26 @@ class _SigninScreenState extends State<SigninScreen> {
                               borderRadius: BorderRadius.circular(18),
                               color: const Color(0xFFE05656),
                             ),
-                            child: const Center(
-                              child: Text(
-                                'Sign in',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: Obx(
+                              () => Center(
+                                child: _loginController.isLoading.value
+                                    ? const SizedBox(
+                                        height: 25,
+                                        width: 25,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Center(
+                                        child: Text(
+                                          'Sign in',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

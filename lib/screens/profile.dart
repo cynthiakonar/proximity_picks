@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:proximity_picks/models/user_model.dart';
 import 'package:proximity_picks/screens/Register.dart';
@@ -94,12 +95,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      await _auth.signOut().whenComplete(() =>
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RegisterScreen())));
+                      await _auth
+                          .signOut()
+                          .whenComplete(() => Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                  child: const RegisterScreen(),
+                                  type: PageTransitionType.leftToRight,
+                                  duration: const Duration(milliseconds: 300),
+                                ),
+                              ));
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

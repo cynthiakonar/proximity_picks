@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:proximity_picks/wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
         const Duration(seconds: 2),
         () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Wrapper())));
+              context,
+              PageTransition(
+                child: Wrapper(),
+                type: PageTransitionType.rightToLeft,
+                duration: const Duration(seconds: 1),
+              ),
+            ));
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:proximity_picks/screens/preferences.dart';
 
 import 'profile.dart';
@@ -49,8 +50,10 @@ class _HomePageState extends State<HomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfilePage(),
+                      PageTransition(
+                        child: const ProfilePage(),
+                        type: PageTransitionType.rightToLeft,
+                        duration: const Duration(milliseconds: 300),
                       ),
                     );
                   },
@@ -251,11 +254,13 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => PreferencesPage(
+              PageTransition(
+                child: PreferencesPage(
                   isEditing: true,
                   uid: widget.uid,
                 ),
+                type: PageTransitionType.rightToLeft,
+                duration: const Duration(milliseconds: 300),
               ),
             );
           },
