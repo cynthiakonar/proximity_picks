@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:proximity_picks/controllers/home_controller.dart';
 import 'package:proximity_picks/screens/preferences.dart';
 
 import 'profile.dart';
@@ -14,6 +16,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  HomeController homeController = Get.put(HomeController());
+
+  @override
+  void initState() {
+    super.initState();
+    homeController.getInfo(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -117,6 +127,10 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  // GetBuilder<HomeController>(builder: (controller) {
+                  //   return homeController.isLoading.value
+                  //       ? CircularProgressIndicator()
+                  //       :
                   GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -127,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisSpacing: 18,
                         mainAxisSpacing: 20,
                       ),
-                      itemCount: 6,
+                      itemCount: homeController.proximityPicks.length,
                       itemBuilder: (BuildContext ctx, index) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(8),
@@ -244,6 +258,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }),
+                  // }),
                   const SizedBox(height: 20),
                 ],
               ),

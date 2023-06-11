@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:proximity_picks/controllers/preference_controller.dart';
 import 'package:proximity_picks/widgets/favourites_shimmer.dart';
-
-import '../models/user_model.dart';
-import 'home.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage(
