@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
         () => Navigator.pushReplacement(
               context,
               PageTransition(
-                child: Wrapper(),
+                child: const Wrapper(),
                 type: PageTransitionType.rightToLeft,
                 duration: const Duration(seconds: 1),
               ),
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE05656),
+      backgroundColor: const Color(0xFFE05656),
       body: Container(
           alignment: Alignment.center,
           child: const Icon(

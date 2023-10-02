@@ -38,7 +38,7 @@ class HomeController extends GetxController {
                 data['shop'].longitude, 12.8426859, 80.1565408);
             data["matched_key"] = key;
             proximityPicks.add(data);
-            print(data);
+            // print(data);
           }
         }
 

@@ -43,9 +43,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
           flexibleSpace: Padding(
             padding: EdgeInsets.fromLTRB(
                 20, MediaQuery.of(context).padding.top + 10, 20, 0),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 CircleAvatar(
                   backgroundColor: Colors.white,
                   child: Icon(

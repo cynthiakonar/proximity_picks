@@ -47,7 +47,9 @@ class PreferenceController extends GetxController {
         keywordscollection
             .doc(user.uid)
             .update({'keywords': selectedOptions})
+            // ignore: avoid_print
             .then((_) => print('Updated'))
+            // ignore: avoid_print
             .catchError((error) => print('Update failed: $error'));
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
@@ -61,7 +63,9 @@ class PreferenceController extends GetxController {
         keywordscollection
             .doc(user.uid)
             .set({'keywords': selectedOptions})
+            // ignore: avoid_print
             .then((_) => print('Added'))
+            // ignore: avoid_print
             .catchError((error) => print('Add failed: $error'));
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
