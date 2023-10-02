@@ -10,7 +10,7 @@ class CustomTextFiled extends StatelessWidget {
       this.textCapitalization,
       this.isObsecure = false,
       this.enableSuggestions = false});
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
   final bool isObsecure;
   final String labelText;
   final TextInputType? keyboardType;

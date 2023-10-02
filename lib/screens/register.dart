@@ -67,7 +67,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                             !value.contains('@')) {
                           return 'Please enter a valid email address.';
                         }
-                        return '';
+                        return null;
                       },
                       labelText: 'Email ID'),
                   SizedBox(height: size.width * 0.05),
@@ -81,7 +81,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                             value.length < 6) {
                           return 'Password must be at least 6 characters long.';
                         }
-                        return '';
+                        return null;
                       }),
                   SizedBox(height: size.width * 0.05),
                   const Spacer(),
