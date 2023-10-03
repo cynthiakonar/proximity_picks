@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:proximity_picks/services/auth.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:proximity_picks/widgets/custom_textfield.dart';
 
 import '../controllers/login_controller.dart';
 import 'home.dart';
@@ -59,113 +62,34 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                   ),
                   SizedBox(height: size.width * 0.2),
-                  TextFormField(
-                    controller: _loginController.emailController,
-                    textCapitalization: TextCapitalization.none,
-                    enableSuggestions: false,
-                    validator: (value) {
-                      if (value == null ||
-                          value.isEmpty ||
-                          !value.contains('@')) {
-                        return 'Please enter a valid email address.';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(16),
-                      labelText: 'Email ID',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFFA4ACB2),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      errorStyle: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE05656),
-                          width: 2,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE0E0E0),
-                        ),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE05656),
-                          width: 2,
-                        ),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE05656),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  ),
+                  CustomTextFiled(
+                      controller: _loginController.emailController,
+                      textCapitalization: TextCapitalization.none,
+                      enableSuggestions: false,
+                      isObsecure: false,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            !value.contains('@')) {
+                          return 'Please enter a valid email address.';
+                        }
+                        return null;
+                      },
+                      labelText: 'Email ID'),
                   SizedBox(height: size.width * 0.05),
-                  TextFormField(
-                    controller: _loginController.passwordController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 6) {
-                        return 'Password must be at least 6 characters long.';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(16),
+                  CustomTextFiled(
+                      controller: _loginController.passwordController,
+                      isObsecure: true,
                       labelText: 'Password',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFFA4ACB2),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      errorStyle: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFFBBAC2),
-                          width: 2,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE0E0E0),
-                        ),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE05656),
-                          width: 2,
-                        ),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE05656),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 6) {
+                          return 'Password must be at least 6 characters long.';
+                        }
+                        return null;
+                      }),
                   SizedBox(height: size.width * 0.05),
                   const Spacer(),
                   Row(
@@ -181,9 +105,9 @@ class _SigninScreenState extends State<SigninScreen> {
                                       .trim(),
                                   context);
                               if (await result == null) {
-                                print("not logged in");
+                                // print("not logged in");
                               } else {
-                                print("logged in");
+                                // print("logged in");
                                 final User? user =
                                     FirebaseAuth.instance.currentUser;
                                 _loginController.emailController.clear();

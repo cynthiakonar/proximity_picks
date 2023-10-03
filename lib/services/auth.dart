@@ -1,7 +1,4 @@
-// import 'dart:js';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:proximity_picks/utils/utils.dart';
 
@@ -33,7 +30,9 @@ class AuthService {
         email: email,
         password: password,
       );
-      User? user = result.user;
+      // ignore: unused_local_variable
+      User? user = result
+          .user; //this user is not being used anywhere, it ccan be used further to generate tokens, or to fetch user profile data, if required in future
       return true;
     } catch (ex) {
       switch (ex.toString()) {
@@ -84,7 +83,7 @@ class AuthService {
           return null;
         default:
           showMessage(ex.toString(), context);
-          print(ex.toString());
+          // print(ex.toString());
           return null;
       }
     } finally {
@@ -97,7 +96,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (ex) {
-      print(ex.toString());
+      // print(ex.toString());
       return null;
     }
   }

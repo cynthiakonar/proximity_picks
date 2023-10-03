@@ -210,10 +210,10 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: const [
+                                        children: [
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                               vertical: 12,
